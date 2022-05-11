@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Message;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
+    public static User user;
     ArrayList<User> data;
     Context c;
     public MessageAdapter(ArrayList<User> data, Context c) {
@@ -33,45 +35,41 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         User content = data.get(position);
+        user = content;
         holder.nme.setText(content.Name);
         holder.desc.setText(content.Description);
         String lastnum = content.Name;
         if (lastnum.endsWith("7")) {
-            holder.img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    holder.img2.setVisibility(View.VISIBLE);
-                }
-            });
+            holder.img2.setVisibility(View.VISIBLE);
         }
-        else {
-            holder.img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    TextView nme = holder.itemView.findViewById(R.id.name);
-                    TextView desc = holder.itemView.findViewById(R.id.description);
-                    AlertDialog.Builder alert = new AlertDialog.Builder(c);
-                    alert.setTitle("Profile");
-                    alert.setMessage(nme.getText());
-                    alert.setPositiveButton("View", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent list_to_main = new Intent(c, MainActivity.class);
-                            list_to_main.putExtra("RandomNum",nme.getText());
-                            list_to_main.putExtra("RandomDesc",desc.getText());
-                            c.startActivity(list_to_main);
-                        }
-                    });
-                    alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
+        holder.img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextView nme = holder.itemView.findViewById(R.id.name);
+                TextView desc = holder.itemView.findViewById(R.id.description);
+                AlertDialog.Builder alert = new AlertDialog.Builder(c);
+                alert.setTitle("Profile");
+                alert.setMessage(nme.getText());
+                alert.setPositiveButton("View", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent list_to_main = new Intent(c, MainActivity.class);
+                        list_to_main.putExtra("RandomNum",content.Name);
+                        list_to_main.putExtra("RandomDesc",content.Description);
+                        list_to_main.putExtra("currentUsers", (Parcelable) user);
+                        list_to_main.putExtra("position",data.indexOf(content));
+                        c.startActivity(list_to_main);
+                    }
+                });
+                alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
-                        }
-                    });
-                    alert.show();
-                }
-            });
-        }
+                    }
+                });
+                alert.show();
+            }
+        });
     }
 
     @Override

@@ -10,20 +10,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.time.Duration;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-
-
+    ArrayList<User> data;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button Btn = findViewById(R.id.FOLLOW);
-        User user = new User("Tom", "description", 1, false);
 
         Intent fromList = getIntent();
         String profilename = fromList.getStringExtra("RandomNum");
         String descriptions = fromList.getStringExtra("RandomDesc");
+        User user = fromList.getParcelableExtra("currentUsers");
+        if (user.Followed == true) {
+            Btn.setText("UNFOLLOW");
+        }
+        else {
+            Btn.setText("FOLLOW");
+        }
         TextView textView = findViewById(R.id.HelloWorld);
         TextView descTest = findViewById(R.id.TestText);
         descTest.setText(descriptions);
