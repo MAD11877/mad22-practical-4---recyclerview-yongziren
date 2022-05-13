@@ -3,6 +3,7 @@ package sg.edu.np.mad.madpractical;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Message;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
@@ -18,30 +19,40 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
-    public static User user;
     ArrayList<User> data;
     Context c;
     public MessageAdapter(ArrayList<User> data, Context c) {
         this.data = data;
         this.c = c;
     }
+
+    @Override
+    public int getItemViewType(int position) {
+        String lastnum = data.get(position).Name;
+        if (lastnum.endsWith("7")) {
+            return 0;
+        }
+        return 1;
+    }
+
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.users, null, false);
+        View item;
+        if (viewType==0) {
+            item = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_biglogo, null, false);
+        }
+        else {
+            item = LayoutInflater.from(parent.getContext()).inflate(R.layout.users, null, false);
+        }
         return new MessageViewHolder(item);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         User content = data.get(position);
-        user = content;
         holder.nme.setText(content.Name);
         holder.desc.setText(content.Description);
-        String lastnum = content.Name;
-        if (lastnum.endsWith("7")) {
-            holder.img2.setVisibility(View.VISIBLE);
-        }
         holder.img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,8 +67,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
                         Intent list_to_main = new Intent(c, MainActivity.class);
                         list_to_main.putExtra("RandomNum",content.Name);
                         list_to_main.putExtra("RandomDesc",content.Description);
-                        list_to_main.putExtra("currentUsers", (Parcelable) user);
-                        list_to_main.putExtra("position",data.indexOf(content));
+                        int pos = data.indexOf(content);
+                        list_to_main.putExtra("position",pos);
+                        list_to_main.putParcelableArrayListExtra("currentUsers",data);
                         c.startActivity(list_to_main);
                     }
                 });

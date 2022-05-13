@@ -13,7 +13,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    ArrayList<User> data;
+    static ArrayList<User> data;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +23,11 @@ public class MainActivity extends AppCompatActivity {
         Intent fromList = getIntent();
         String profilename = fromList.getStringExtra("RandomNum");
         String descriptions = fromList.getStringExtra("RandomDesc");
-        User user = fromList.getParcelableExtra("currentUsers");
+        if (data == null) {
+            data = fromList.getExtras().getParcelableArrayList("currentUsers");
+        }
+        int position = fromList.getIntExtra("position",0);
+        User user = data.get(position);
         if (user.Followed == true) {
             Btn.setText("UNFOLLOW");
         }
