@@ -1,6 +1,7 @@
 package sg.edu.np.mad.madpractical;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.view.View;
@@ -20,17 +21,17 @@ public class MessageGroup extends AppCompatActivity {
         grp1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextView grp1txt = findViewById(R.id.group1);
-                ImageView imageView = findViewById(R.id.bigandroidlogo);
-                imageView.setVisibility(View.INVISIBLE);
-                grp1txt.setText("Group 1");
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.frameLayout, new group1fragment());
+                ft.commit();
             }
         });
         grp2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ImageView imageView = findViewById(R.id.bigandroidlogo);
-                imageView.setVisibility(View.VISIBLE);
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.frameLayout, new group2fragment());
+                ft.commit();
             }
         });
     }
